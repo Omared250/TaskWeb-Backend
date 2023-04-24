@@ -1,7 +1,11 @@
 const express = require('express');
+require('dotenv').config();
 
 // create express server
 const app = express();
+
+// public directory
+app.use( express.static('public') );
 
 // Routes
 app.get('/', (req, res) => {
@@ -11,6 +15,6 @@ app.get('/', (req, res) => {
 });
 
 // listen petitions
-app.listen(4000, () => {
+app.listen( process.env.PORT, () => {
     console.log(`Server running at port ${ 4000 }`);
 })
