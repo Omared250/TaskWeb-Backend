@@ -8,16 +8,19 @@ const { validateJWT } = require('../middlewares/jwt-validator');
 const { getEvents, createEvent, updateEvent, deleteEvent } = require('../controllers/events');
 const router = Router();
 
+// Validate Token
+router.use( validateJWT );
+
 // get events
-router.get('/', validateJWT, getEvents );
+router.get('/', getEvents );
 
 // Create an event
-router.post('/', validateJWT, createEvent );
+router.post('/', createEvent );
 
 // Update event
-router.put('/:id', validateJWT, updateEvent );
+router.put('/:id', updateEvent );
 
 // Update event
-router.delete('/:id', validateJWT, deleteEvent );
+router.delete('/:id', deleteEvent );
 
 module.exports = router;
