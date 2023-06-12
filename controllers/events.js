@@ -1,5 +1,6 @@
 const { response } = require('express');
 const Event = require('../models/Event');
+const axios = require('axios');
 
 const getEvents = async( req, res = response ) => {
 
@@ -13,20 +14,16 @@ const getEvents = async( req, res = response ) => {
 };
 
 const createEvent = async( req, res = response ) => {
-
-    const event = new Event( req.body );
-
+    
     try {
 
-        event.user = req.uid;
-
-        const eventSaved = await event.save();
+        const { data } = await axios.post('http://localhost:4001/api/events/', { requestBody: req.body, requestUser: req.uid });
 
         res.status(201).json({
             ok: true,
-            event: eventSaved
-        });
-
+            event: data.event
+        })
+        
     } catch (err) {
         console.log(err);
         res.status(500).json({
