@@ -14,7 +14,7 @@ const getEvents = async( req, res = response ) => {
 };
 
 const createEvent = async( req, res = response ) => {
-    
+
     try {
 
         const { data } = await axios.post('http://localhost:4001/api/events/', { requestBody: req.body, requestUser: req.uid });
@@ -35,38 +35,16 @@ const createEvent = async( req, res = response ) => {
 
 const updateEvent = async( req, res = response ) => {
 
-    const eventId = req.params.id;
-    const uid = req.uid;
-
     try {
 
-        const event = await Event.findById( eventId );
+        const { data } = await axios.put('http://localhost:4002/api/events/update', { requestBody: req.body, requestParam: req.params.id, requestUser: req.uid });
+        console.log(data);
 
-        if ( !event ) {
-            return res.status(404).json({
-                ok: false,
-                msg: 'Event do not exist with that Id'
-            });
-        }
-
-        if ( event.user.toString() !== uid ) {
-            return res.status(401).json({
-                ok: false,
-                msg: 'No permissions to update this event'
-            });
-        }
-
-        const newEvent = {
-            ...req.body,
-            user: uid,
-        }
-
-        const updatedEvent = await Event.findByIdAndUpdate( eventId, newEvent, { new: true } );
 
         res.status(201).json({
             ok: true,
-            event: updatedEvent
-        });
+            event: data.event
+        })
         
     } catch (err) {
         console.log(err);
@@ -74,6 +52,7 @@ const updateEvent = async( req, res = response ) => {
             ok: false,
             msg: 'Yous should contact admin'
         });
+
     }
 };
 
