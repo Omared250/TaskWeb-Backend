@@ -38,8 +38,6 @@ const updateEvent = async( req, res = response ) => {
     try {
 
         const { data } = await axios.put('http://localhost:4002/api/events/update', { requestBody: req.body, requestParam: req.params.id, requestUser: req.uid });
-        console.log(data);
-
 
         res.status(201).json({
             ok: true,
@@ -58,33 +56,19 @@ const updateEvent = async( req, res = response ) => {
 
 const deleteEvent = async( req, res = response ) => {
 
-    const eventId = req.params.id;
-    const uid = req.uid;
-
     try {
 
-        const event = await Event.findById( eventId );
-
-        if ( !event ) {
-            return res.status(404).json({
-                ok: false,
-                msg: 'Event do not exist with that Id'
-            });
-        }
-
-        if ( event.user.toString() !== uid ) {
-            return res.status(401).json({
-                ok: false,
-                msg: 'No permissions to delete this event'
-            });
-        }
-
-        await Event.findByIdAndDelete( eventId );
-
-        res.json({
-            ok: true,
-            msg: 'Event deleted'
+        const { data } = await axios.delete(`http://localhost:4003/api/events/delete`, {
+            params: {
+                id: req.params.id,
+                uid: req.uid
+            }
         });
+
+        res.status(201).json({
+            ok: true,
+            event: 'Event Deleted'
+        })
         
     } catch (err) {
         console.log(err);
@@ -92,6 +76,7 @@ const deleteEvent = async( req, res = response ) => {
             ok: false,
             msg: 'Yous should contact admin'
         });
+
     }
 };
 
