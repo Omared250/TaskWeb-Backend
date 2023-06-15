@@ -1,11 +1,10 @@
 const { response } = require('express');
-const Event = require('../models/Event');
 const axios = require('axios');
 
 const getEvents = async( req, res = response ) => {
 
     try {
-        
+
         const { data } = await axios.get('http://localhost:4004/api/events/');
 
         res.json({
