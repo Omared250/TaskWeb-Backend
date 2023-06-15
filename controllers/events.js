@@ -4,12 +4,22 @@ const axios = require('axios');
 
 const getEvents = async( req, res = response ) => {
 
-    const events = await Event.find().populate('user', 'name');
+    try {
+        
+        const { data } = await axios.get('http://localhost:4004/api/events/');
 
-    res.json({
-        ok: true,
-        events
-    })
+        res.json({
+            ok: true,
+            events: data.events
+        })
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            ok: false,
+            msg: 'You should contact admin'
+        })
+    }
 
 };
 
