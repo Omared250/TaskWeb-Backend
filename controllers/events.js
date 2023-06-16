@@ -1,5 +1,6 @@
 const { response } = require('express');
 const Event = require('../models/Event');
+const axios = require('axios');
 
 const getEvents = async( req, res = response ) => {
 
@@ -14,19 +15,15 @@ const getEvents = async( req, res = response ) => {
 
 const createEvent = async( req, res = response ) => {
 
-    const event = new Event( req.body );
-
     try {
 
-        event.user = req.uid;
-
-        const eventSaved = await event.save();
+        const { data } = await axios.post('http://localhost:4001/api/events/', { requestBody: req.body, requestUser: req.uid });
 
         res.status(201).json({
             ok: true,
-            event: eventSaved
-        });
-
+            event: data.event
+        })
+        
     } catch (err) {
         console.log(err);
         res.status(500).json({
@@ -38,38 +35,14 @@ const createEvent = async( req, res = response ) => {
 
 const updateEvent = async( req, res = response ) => {
 
-    const eventId = req.params.id;
-    const uid = req.uid;
-
     try {
 
-        const event = await Event.findById( eventId );
-
-        if ( !event ) {
-            return res.status(404).json({
-                ok: false,
-                msg: 'Event do not exist with that Id'
-            });
-        }
-
-        if ( event.user.toString() !== uid ) {
-            return res.status(401).json({
-                ok: false,
-                msg: 'No permissions to update this event'
-            });
-        }
-
-        const newEvent = {
-            ...req.body,
-            user: uid,
-        }
-
-        const updatedEvent = await Event.findByIdAndUpdate( eventId, newEvent, { new: true } );
+        const { data } = await axios.put('http://localhost:4002/api/events/update', { requestBody: req.body, requestParam: req.params.id, requestUser: req.uid });
 
         res.status(201).json({
             ok: true,
-            event: updatedEvent
-        });
+            event: data.event
+        })
         
     } catch (err) {
         console.log(err);
@@ -77,38 +50,25 @@ const updateEvent = async( req, res = response ) => {
             ok: false,
             msg: 'Yous should contact admin'
         });
+
     }
 };
 
 const deleteEvent = async( req, res = response ) => {
 
-    const eventId = req.params.id;
-    const uid = req.uid;
-
     try {
 
-        const event = await Event.findById( eventId );
-
-        if ( !event ) {
-            return res.status(404).json({
-                ok: false,
-                msg: 'Event do not exist with that Id'
-            });
-        }
-
-        if ( event.user.toString() !== uid ) {
-            return res.status(401).json({
-                ok: false,
-                msg: 'No permissions to delete this event'
-            });
-        }
-
-        await Event.findByIdAndDelete( eventId );
-
-        res.json({
-            ok: true,
-            msg: 'Event deleted'
+        const { data } = await axios.delete(`http://localhost:4003/api/events/delete`, {
+            params: {
+                id: req.params.id,
+                uid: req.uid
+            }
         });
+
+        res.status(201).json({
+            ok: true,
+            event: 'Event Deleted'
+        })
         
     } catch (err) {
         console.log(err);
@@ -116,6 +76,7 @@ const deleteEvent = async( req, res = response ) => {
             ok: false,
             msg: 'Yous should contact admin'
         });
+
     }
 };
 
