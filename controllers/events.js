@@ -1,11 +1,12 @@
 const { response } = require('express');
 const axios = require('axios');
+require('dotenv').config();
 
 const getEvents = async( req, res = response ) => {
 
     try {
 
-        const { data } = await axios.get('http://localhost:4004/api/events/');
+        const { data } = await axios.get(process.env.GETEVENTS_MICROSERVICE);
         
         res.json({
             ok: true,
@@ -26,7 +27,7 @@ const createEvent = async( req, res = response ) => {
 
     try {
 
-        const { data } = await axios.post('http://localhost:4001/api/events/', { requestBody: req.body, requestUser: req.uid });
+        const { data } = await axios.post(process.env.CREATEEVENTS_MICROSERVICE, { requestBody: req.body, requestUser: req.uid });
 
         res.status(201).json({
             ok: true,
@@ -46,7 +47,7 @@ const updateEvent = async( req, res = response ) => {
 
     try {
 
-        const { data } = await axios.put('http://localhost:4002/api/events/update', { requestBody: req.body, requestParam: req.params.id, requestUser: req.uid });
+        const { data } = await axios.put(process.env.UPDATEEVENTS_MICROSERVICE, { requestBody: req.body, requestParam: req.params.id, requestUser: req.uid });
 
         res.status(201).json({
             ok: true,
@@ -67,7 +68,7 @@ const deleteEvent = async( req, res = response ) => {
 
     try {
 
-        const { data } = await axios.delete(`http://localhost:4003/api/events/delete`, {
+        const { data } = await axios.delete(process.env.DELETEEVENTS_MICROSERVICE, {
             params: {
                 id: req.params.id,
                 uid: req.uid
