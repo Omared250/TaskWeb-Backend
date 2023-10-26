@@ -79,7 +79,7 @@ export const useSignStore = () => {
 ```
 ## Project Configuration
 
-If you want to test the application on your local machine keep in mind that inside the CalendarApi.js Axios is calling an Environment Variable that for security reasons is not recommended to be updated in the repository files. security reasons it is not recommended to upload in the repository files so in order to run the project locally in good form you must create outside the SRC folder a file called .env where you can create these environment variables PORT, DB_CNN, SECRET_JWT_SEED and assign the value of each one as you prefer then the application will work in normal state. Also do not forget to download the Frontend repository of this project [HERE](https://github.com/Omared250/TodoWeb)
+If you want to test the application on your local machine keep in mind that inside the CalendarApi.js Axios is calling an Environment Variable that for security reasons is not recommended to be updated in the repository files. security reasons it is not recommended to upload in the repository files so in order to run the project locally in good form you must create outside the SRC folder a file called .env where you can create these environment variables PORT, DB_CNN, SECRET_JWT_SEED, GETEVENTS_MICROSERVICE, CREATEEVENTS_MICROSERVICE, UPDATEEVENTS_MICROSERVICE, DELETEEVENTS_MICROSERVICE and assign the value of each one as you prefer then the application will work in normal state. Also do not forget to download the Frontend repository of this project [HERE](https://github.com/Omared250/TodoWeb)
 ## Author
 
 - Github - [Omar Ascanio](https://github.com/Omared250)
