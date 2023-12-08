@@ -2,6 +2,8 @@ const { response } = require('express');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const { generateJWT } = require('../helpers/jwt');
+const logger = require('../winston-config');
+
 
 const createUser = async(req, res = response ) => {
 
@@ -12,6 +14,7 @@ const createUser = async(req, res = response ) => {
         let user = await User.findOne({ email});
         
         if ( user ) {
+            logger.error({ ok: false, msg: 'User already exist with the same email', status: 400 });
             return res.status(400).json({
                 ok: false,
                 msg: 'User already exist with the same email'
@@ -35,6 +38,8 @@ const createUser = async(req, res = response ) => {
             name: user.name,
             token
         });
+        logger.info('User created correctly')
+
 
     } catch (error) {
         console.log(error);
@@ -42,6 +47,7 @@ const createUser = async(req, res = response ) => {
             ok: false,
             msg: 'You should contact Admin'
         })
+        logger.error({ status: error.response.status, statusText: error.response.statusText, url: error.config.url });
     }
 };
 
@@ -54,6 +60,7 @@ const loginUser = async( req, res = response ) => {
         let user = await User.findOne({ email });
 
         if ( !user ) {
+            logger.error({ ok: false, msg: 'User/Password are not correct', status: 400 });
             return res.status(400).json({
                 ok: false,
                 msg: 'User/Password are not correct'
@@ -64,6 +71,7 @@ const loginUser = async( req, res = response ) => {
         const validPassword = bcrypt.compareSync( password, user.password );
 
         if ( !validPassword ) {
+            logger.error({ ok: false, msg: 'User/Password are not correct', status: 400 });
             return res.status(400).json({
                 ok: false,
                 msg: 'User/Password are not correct'
@@ -87,6 +95,7 @@ const loginUser = async( req, res = response ) => {
             ok: false,
             msg: 'You should contact Admin'
         })
+        logger.error({ status: error.response.status, statusText: error.response.statusText, url: error.config.url });
 
     }
 };
@@ -104,6 +113,7 @@ const revalidateToken = async( req, res = response ) => {
         name,
         token
     })
+    logger.info('Toke revalidated')
 };
 
 module.exports = {

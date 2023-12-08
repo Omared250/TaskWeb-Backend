@@ -1,3 +1,4 @@
+require('newrelic');
 const express = require('express');
 const { dbConnection } = require('./database/config');
 require('dotenv').config();
@@ -24,5 +25,5 @@ app.use('/api/events', require('./routes/events'));
 
 // listen petitions
 app.listen( process.env.PORT, () => {
-    console.log(`Server running at port ${ 4000 }`);
+    console.log(`Server running at port ${ process.env.PORT }`);
 })
