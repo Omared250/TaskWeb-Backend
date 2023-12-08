@@ -1,4 +1,5 @@
 const { response } = require('express');
+const logger = require('../winston-config');
 const axios = require('axios');
 require('dotenv').config();
 
@@ -12,13 +13,16 @@ const getEvents = async( req, res = response ) => {
             ok: true,
             events: data.events
         })
-
+        
     } catch (err) {
+
         console.log(err);
         res.status(500).json({
             ok: false,
             msg: 'You should contact admin'
-        })
+        });
+        logger.error( err.response.data, { status: err.response.status, statusText: err.response.statusText, url: err.config.url } );
+
     }
 
 };
@@ -33,13 +37,17 @@ const createEvent = async( req, res = response ) => {
             ok: true,
             event: data.event
         })
-        
+        logger.info('Event was created', data.event );
+
     } catch (err) {
+
         console.log(err);
         res.status(500).json({
             ok: false,
             msg: 'You should contact admin'
         });
+        logger.error( err.response.data, { status: err.response.status, statusText: err.response.statusText, url: err.config.url } );
+
     }
 };
 
@@ -53,13 +61,16 @@ const updateEvent = async( req, res = response ) => {
             ok: true,
             event: data.event
         })
+        logger.info('Event was updated', data.event );
         
     } catch (err) {
+
         console.log(err);
-        res.status(500).json({
+        res.status(err.response.status).json({
             ok: false,
-            msg: 'Yous should contact admin'
+            msg: err.response.data.msg,
         });
+        logger.error( err.response.data, { status: err.response.status, statusText: err.response.statusText, url: err.config.url } );
 
     }
 };
@@ -79,13 +90,16 @@ const deleteEvent = async( req, res = response ) => {
             ok: true,
             event: 'Event Deleted'
         })
+        logger.info('Event was deleted', data );
         
     } catch (err) {
+
         console.log(err);
-        res.status(500).json({
+        res.status(err.response.status).json({
             ok: false,
-            msg: 'Yous should contact admin'
+            msg: err.response.data.msg,
         });
+        logger.error( err.response.data, { status: err.response.status, statusText: err.response.statusText, url: err.config.url } );
 
     }
 };
