@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: Deploy to EC2 and Change Tracking New Relic
 
 on:
   push:
@@ -33,3 +33,20 @@ jobs:
           git pull
           sudo systemctl restart taskweb-backend.service
         EOF
+  
+  newrelic:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Set Release Version from Tag
+      run: echo "RELEASE_VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
+
+    - name: New Relic Application Deployment Marker
+      uses: newrelic/deployment-marker-action@v2.3.0
+      with:
+        apiKey: ${{ secrets.NEW_RELIC_API_KEY }}
+        guid: ${{ secrets.NEW_RELIC_DEPLOYMENT_ENTITY_GUID }}
+        version: "${{ env.RELEASE_VERSION }}"
+        user: "${{ github.actor }}"
+        region: "EU"
+
