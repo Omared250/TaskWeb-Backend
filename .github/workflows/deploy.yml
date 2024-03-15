@@ -2,10 +2,14 @@ name: Deploy to EC2
 
 on:
   push:
+    paths-ignore:
+      - '.github/workflows/**'
     branches:
       - main
     
   pull_request:
+    paths-ignore:
+      - '.github/workflows/**'
     branches:
       - main
 
@@ -27,5 +31,5 @@ jobs:
         ssh -o StrictHostKeyChecking=no -l ec2-user ${{ secrets.EC2_HOST }} <<-EOF
           cd /home/ec2-user/TaskWeb-Backend
           git pull
-          mkdir example
+          sudo systemctl restart taskweb-backend.service
         EOF
