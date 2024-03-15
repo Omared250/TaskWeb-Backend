@@ -27,3 +27,5 @@ app.use('/api/events', require('./routes/events'));
 app.listen( process.env.PORT, () => {
     console.log(`Server running at port ${ process.env.PORT }`);
 })
+
+// This a test to generate a deployment marker in New Relic
