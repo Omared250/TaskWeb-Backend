@@ -15,9 +15,6 @@ const customLevels = {
 const customFormat = format.combine(
   format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
   format.json(),
-//   format.printf(({ timestamp, level, message }) => {
-//     return `${timestamp} [${level}]: ${message}`;
-//   })
 );
 
 // Crea el logger de Winston con los niveles y formato personalizados, y agrega los transportes que desees

@@ -3,109 +3,85 @@ const logger = require('../winston-config');
 const axios = require('axios');
 require('dotenv').config();
 
-const getEvents = async( req, res = response ) => {
+const handleError = (err, res, action) => {
+    const statusCode = err.response ? err.response.status : 500;
+    const message = err.response && err.response.data ? err.response.data.msg : 'An unexpected error occurred';
+    const stack = err.stack;
+    const errorDetails = {
+        action,
+        statusCode,
+        message,
+        stack,
+        url: err.config ? err.config.url : undefined,
+    };
 
+    logger.error(errorDetails);
+
+    res.status(statusCode).json({
+        ok: false,
+        msg: message
+    });
+};
+
+const getEvents = async (req, res = response) => {
     try {
-
         const { data } = await axios.get(process.env.GETEVENTS_MICROSERVICE);
-        
         res.json({
             ok: true,
             events: data.events
         })
-        
     } catch (err) {
-
-        console.log(err);
-        res.status(500).json({
-            ok: false,
-            msg: 'You should contact admin'
-        });
-        logger.error( err.response.data, { status: err.response.status, statusText: err.response.statusText, url: err.config.url } );
-
+        handleError(err, res, 'getEvents');
     }
-
 };
 
-const createEvent = async( req, res = response ) => {
+const createEvent = async (req, res = response) => {
 
     try {
-
         const { data } = await axios.post(process.env.CREATEEVENTS_MICROSERVICE, { requestBody: req.body, requestUser: req.uid });
-
         res.status(201).json({
             ok: true,
             event: data.event
         })
-        logger.info('Event was created', data.event );
-
+        logger.info('Event was created', data.event);
     } catch (err) {
-
-        console.log(err);
-        res.status(500).json({
-            ok: false,
-            msg: 'You should contact admin'
-        });
-        logger.error( err.response.data, { status: err.response.status, statusText: err.response.statusText, url: err.config.url } );
-
+        handleError(err, res, 'createEvent');
     }
 };
 
-const updateEvent = async( req, res = response ) => {
-
+const updateEvent = async (req, res = response) => {
     try {
-
         const { data } = await axios.put(process.env.UPDATEEVENTS_MICROSERVICE, { requestBody: req.body, requestParam: req.params.id, requestUser: req.uid });
-
-        res.status(201).json({
+        res.status(200).json({
             ok: true,
             event: data.event
         })
-        logger.info('Event was updated', data.event );
-        
+        logger.info('Event was updated', data.event);
     } catch (err) {
-
-        console.log(err);
-        res.status(err.response.status).json({
-            ok: false,
-            msg: err.response.data.msg,
-        });
-        logger.error( err.response.data, { status: err.response.status, statusText: err.response.statusText, url: err.config.url } );
-
+        handleError(err, res, 'updateEvent');
     }
 };
 
-const deleteEvent = async( req, res = response ) => {
-
+const deleteEvent = async (req, res = response) => {
     try {
-
         const { data } = await axios.delete(process.env.DELETEEVENTS_MICROSERVICE, {
             params: {
                 id: req.params.id,
                 uid: req.uid
             }
         });
-
-        res.status(201).json({
+        res.status(200).json({
             ok: true,
             event: 'Event Deleted'
         })
-        logger.info('Event was deleted', data );
-        
+        logger.info('Event was deleted', data);
     } catch (err) {
-
-        console.log(err);
-        res.status(err.response.status).json({
-            ok: false,
-            msg: err.response.data.msg,
-        });
-        logger.error( err.response.data, { status: err.response.status, statusText: err.response.statusText, url: err.config.url } );
-
+        handleError(err, res, 'deleteEvent');
     }
 };
 
 module.exports = {
-    getEvents, 
+    getEvents,
     createEvent,
     updateEvent,
     deleteEvent
