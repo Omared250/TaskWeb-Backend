@@ -22,7 +22,7 @@ const logger = createLogger({
   levels: customLevels,
   format: customFormat,
   transports: [
-    new transports.Console(),
+    // new transports.Console(),
     new transports.File({ filename: 'combined.log' }),
     new transports.File({ filename: 'error.log', level: 'error' }),
   ],
