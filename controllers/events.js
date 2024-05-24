@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const handleError = (err, res, action) => {
     const statusCode = err.response ? err.response.status : 500;
-    const message = err.response && err.response.data ? err.response.data.msg : 'An unexpected error occurred';
+    const message = err.response && err.response.data ? err.response.data.msg : `An unexpected error occurred with ${action}`;
     const stack = err.stack;
     const errorDetails = {
         action,
