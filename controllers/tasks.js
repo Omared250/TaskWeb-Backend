@@ -24,6 +24,18 @@ const handleError = (err, res, action) => {
     });
 };
 
+const uncompletedTasks = async (req, res) => {
+    try {
+        const { data } = await axios.get(process.env.GETUNCOMPLETEDTASKS);
+        res.json({
+            ok: true,
+            tasks: data
+        })
+    } catch (err) {
+        handleError(err, res, 'getUncompletedTasks');
+    }
+};
+
 // Craete a Task
 const createTask = async (req, res) => {
     try {
@@ -38,21 +50,22 @@ const createTask = async (req, res) => {
     }
 };
 
-// // Update a Task
-// const updateTask = async (req, res) => {
-//     try {
-//         const { data } = await axios.post(process.env.UPDATETASK, { requestBody: req.body });
-//         res.status(201).json({
-//             ok: true,
-//             event: data.event
-//         })
-//         logger.info('Task was created', data.event);
-//     } catch (err) {
-//         handleError(err, res, 'createTask');
-//     }
-// };
+// Update a Task
+const updateTask = async (req, res) => {
+    try {
+        const { data } = await axios.post(process.env.UPDATETASK, { requestBody: req.body });
+        res.status(201).json({
+            ok: true,
+            event: data.event
+        })
+        logger.info('Task was created', data.event);
+    } catch (err) {
+        handleError(err, res, 'createTask');
+    }
+};
 
 module.exports = {
     createTask,
+    uncompletedTasks,
     // updateTask,
 }
