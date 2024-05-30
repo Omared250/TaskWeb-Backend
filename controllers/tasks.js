@@ -67,14 +67,29 @@ const updateTask = async (req, res = response) => {
             ok: true,
             event: data.event
         })
-        logger.info('Event was updated', data.event);
+        logger.info('Task was updated', data.event);
     } catch (err) {
         handleError(err, res, 'updateTask');
     }
 };
+
+const deleteTask = async (req, res = response) => {
+    try {
+        const { data } = await axios.delete(`${process.env.DELETETASK}/${req.params.id}`);
+        res.status(200).json({
+            ok: true,
+            event: 'Task Deleted'
+        })
+        logger.info('Event was deleted', data);
+    } catch (err) {
+        handleError(err, res, 'deleteEvent');
+    }
+};
+
 module.exports = {
     getUncompletedTasks,
     getCompletedTasks,
     createTask,
-    updateTask
+    updateTask,
+    deleteTask
 }
