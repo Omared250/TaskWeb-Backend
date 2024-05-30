@@ -24,7 +24,7 @@ const handleError = (err, res, action) => {
     });
 };
 
-const uncompletedTasks = async (req, res) => {
+const getUncompletedTasks = async (req, res) => {
     try {
         const { data } = await axios.get(process.env.GETUNCOMPLETEDTASKS);
         res.json({
@@ -36,36 +36,45 @@ const uncompletedTasks = async (req, res) => {
     }
 };
 
-// Craete a Task
+const getCompletedTasks = async (req, res) => {
+    try {
+        const { data } = await axios.get(process.env.GETCOMPLETEDTASKS);
+        res.json({
+            ok: true,
+            tasks: data
+        })
+    } catch (err) {
+        handleError(err, res, 'getUncompletedTasks');
+    }
+};
+
 const createTask = async (req, res) => {
     try {
-        const { data } = await axios.post(process.env.CREATETASK, { requestBody: req.body });
-        res.status(201).json({
+        const { data } = await axios.post(process.env.CREATETASK, req.body );
+        res.json({
             ok: true,
-            event: data.event
-        })
-        logger.info('Task was created', data.event);
+            task: data
+        });
     } catch (err) {
-        handleError(err, res, 'createTask');
+        handleError(err, res, 'createTask'); 
     }
-};
+}
 
-// Update a Task
-const updateTask = async (req, res) => {
+const updateTask = async (req, res = response) => {
     try {
-        const { data } = await axios.post(process.env.UPDATETASK, { requestBody: req.body });
-        res.status(201).json({
+        const { data } = await axios.put(`${process.env.UPDATETASK}/${req.params.id}`, { requestBody: req.body });
+        res.status(200).json({
             ok: true,
             event: data.event
         })
-        logger.info('Task was created', data.event);
+        logger.info('Event was updated', data.event);
     } catch (err) {
-        handleError(err, res, 'createTask');
+        handleError(err, res, 'updateTask');
     }
 };
-
 module.exports = {
+    getUncompletedTasks,
+    getCompletedTasks,
     createTask,
-    uncompletedTasks,
-    // updateTask,
+    updateTask
 }
