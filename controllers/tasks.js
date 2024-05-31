@@ -33,6 +33,7 @@ const getUncompletedTasks = async (req, res) => {
         })
     } catch (err) {
         handleError(err, res, 'getUncompletedTasks');
+        throw err;
     }
 };
 
@@ -44,7 +45,8 @@ const getCompletedTasks = async (req, res) => {
             tasks: data
         })
     } catch (err) {
-        handleError(err, res, 'getUncompletedTasks');
+        handleError(err, res, 'getCompletedTasks');
+        throw err;
     }
 };
 
@@ -56,7 +58,8 @@ const createTask = async (req, res) => {
             task: data
         });
     } catch (err) {
-        handleError(err, res, 'createTask'); 
+        handleError(err, res, 'createTask');
+        throw err;
     }
 }
 
@@ -70,6 +73,7 @@ const updateTask = async (req, res = response) => {
         logger.info('Task was updated', data.event);
     } catch (err) {
         handleError(err, res, 'updateTask');
+        throw err;
     }
 };
 
@@ -82,7 +86,8 @@ const deleteTask = async (req, res = response) => {
         })
         logger.info('Task was deleted', data);
     } catch (err) {
-        handleError(err, res, 'deleteEvent');
+        handleError(err, res, 'deleteTask');
+        throw err;
     }
 };
 
@@ -95,7 +100,8 @@ const completeTask = async (req, res = response) => {
         })
         logger.info('Task was completed', data);
     } catch (err) {
-        handleError(err, res, 'deleteEvent');
+        handleError(err, res, 'completeTask');
+        throw err;
     }
 };
 
@@ -108,7 +114,8 @@ const retakeTask = async (req, res = response) => {
         })
         logger.info('Task was retake', data);
     } catch (err) {
-        handleError(err, res, 'deleteEvent');
+        handleError(err, res, 'retakeTask');
+        throw err;
     }
 };
 
