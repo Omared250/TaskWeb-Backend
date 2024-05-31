@@ -80,7 +80,33 @@ const deleteTask = async (req, res = response) => {
             ok: true,
             event: 'Task Deleted'
         })
-        logger.info('Event was deleted', data);
+        logger.info('Task was deleted', data);
+    } catch (err) {
+        handleError(err, res, 'deleteEvent');
+    }
+};
+
+const completeTask = async (req, res = response) => {
+    try {
+        const { data } = await axios.patch(`${process.env.COMPLETEANDRETAKETASKS}/${req.params.id}/complete`);
+        res.status(200).json({
+            ok: true,
+            task: data
+        })
+        logger.info('Task was completed', data);
+    } catch (err) {
+        handleError(err, res, 'deleteEvent');
+    }
+};
+
+const retakeTask = async (req, res = response) => {
+    try {
+        const { data } = await axios.patch(`${process.env.COMPLETEANDRETAKETASKS}/${req.params.id}/retake`);
+        res.status(200).json({
+            ok: true,
+            task: data
+        })
+        logger.info('Task was retake', data);
     } catch (err) {
         handleError(err, res, 'deleteEvent');
     }
@@ -91,5 +117,7 @@ module.exports = {
     getCompletedTasks,
     createTask,
     updateTask,
-    deleteTask
+    deleteTask,
+    completeTask,
+    retakeTask
 }

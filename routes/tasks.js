@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getCompletedTasks, getUncompletedTasks, createTask, updateTask, deleteTask } = require('../controllers/tasks');
+const { getCompletedTasks, getUncompletedTasks, createTask, updateTask, deleteTask, completeTask, retakeTask } = require('../controllers/tasks');
 const router = Router();
 
 // GetUncompletedTasks
@@ -17,10 +17,10 @@ router.put('/updateTask/:id', updateTask);
 // Delete Task
 router.delete('/deleteTask/:id', deleteTask);
 
-// // Complete a task
-// router.patch('/:id/complete', completeTask);
+// Complete a task
+router.patch('/:id/complete', completeTask);
 
-// // retake a task
-// router.patch('/:id/retake', retakeTask);
+// retake a task
+router.patch('/:id/retake', retakeTask);
 
 module.exports = router;
