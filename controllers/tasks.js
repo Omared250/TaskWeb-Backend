@@ -26,7 +26,7 @@ const handleError = (err, res, action) => {
 
 const getUncompletedTasks = async (req, res) => {
     try {
-        const { data } = await axios.get(process.env.GETUNCOMPLETEDTASKS);
+        const { data } = await axios.get(`${process.env.GETUNCOMPLETEDTASKS}?userId=${req.query.userId}`);
         res.json({
             ok: true,
             tasks: data
@@ -38,7 +38,7 @@ const getUncompletedTasks = async (req, res) => {
 
 const getCompletedTasks = async (req, res) => {
     try {
-        const { data } = await axios.get(process.env.GETCOMPLETEDTASKS);
+        const { data } = await axios.get(`${process.env.GETCOMPLETEDTASKS}?userId=${req.query.userId}`);
         res.json({
             ok: true,
             tasks: data
